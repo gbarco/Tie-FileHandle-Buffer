@@ -28,15 +28,15 @@ test.pl
 
 =head1 BUGS
 
-Probably some
+This is a new module and has not been thoroughly tested.
 
 =cut
 
 package Tie::FileHandle::Buffer;
 
 use vars qw(@ISA $VERSION);
-@ISA = qw(Tie::FileHandle::Base);
-$VERSION = 0.1;
+use base qw(Tie::FileHandle::Base);
+$VERSION = 0.11;
 
 # TIEHANDLE
 # Usage: tie *HANDLE, 'Tie::FileHandle::Buffer'
@@ -64,7 +64,7 @@ sub clear {
 
 =head1 AUTHORS AND COPYRIGHT
 
-Written by Robby Walker ( webmaster@pointwriter.com ) for Point Writer ( http://www.pointwriter.com/ ).
+Written by Robby Walker ( robwalker@cpan.org ) for Point Writer ( http://www.pointwriter.com/ ).
 
 You may redistribute/modify/etc. this module under the same terms as Perl itself.
 

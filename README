@@ -1,4 +1,4 @@
-Tie/FileHandle/Buffer version 0.1
+Tie/FileHandle/Buffer version 0.11
 ==================================
 
 This module, when tied to a filehandle, will capture and store all that
@@ -24,11 +24,11 @@ DEPENDENCIES
 
 This module requires these other modules and libraries:
 
-  blah blah blah
+  Tie::FileHandle::Base (version 0.1 or greater)
 
 COPYRIGHT AND LICENCE
 
-Written by Robby Walker ( webmaster@pointwriter.com ) for Point Writer ( http://www.pointwriter.com/ ).
+Written by Robby Walker ( robwalker@cpan.org ) for Point Writer ( http://www.pointwriter.com/ ).
 
 You may redistribute/modify/etc. this module under the same terms as Perl itself.
 
