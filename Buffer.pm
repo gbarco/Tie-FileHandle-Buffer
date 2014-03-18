@@ -2,25 +2,34 @@
 
 =head1 NAME
 
-Tie::FileHandle::Buffer - filehandle tie that captures output
+Tie::FileHandle::Split - filehandle tie that captures, splits and stores output
+into files in a given path.
 
 =head1 DESCRIPTION
 
 This module, when tied to a filehandle, will capture and store all that
-is output to that handle.  You may then act on that stored information in
-one of the following ways.
+is output to that handle. You should then select a path to store files and a
+size to split files.
 
- my $contents = (tied *HANDLE)->get_contents; # retrieves the stored output
+=head1 SYNOPSIS
 
- (tied *HANDLE)->clear; # clears the output buffer
+	# $path should exist or the current process have
+	# $size should be > 0
+	tie *HANDLE, 'Tie::FileHandle::Split', $path, $size;
 
-This module goes hand in hand with the Output::Buffer module.
+	(tied *HANDLE)->print( ' ' x 1024 );
+
+	# write all outstanding output from buffers to files
+	(tied *HANDLE)->write_buffers;
+
+	# get generated filenames to the moment
+	(tied *HANDLE)->get_filenames();
 
 =head1 TODO
 
 =over 4
 
-=item *
+=item * finish should sync to disk to ensure data has been written to disk
 
 test.pl
 
@@ -28,18 +37,18 @@ test.pl
 
 =head1 BUGS
 
-This is a new module and has not been thoroughly tested.
+No known bugs. Please report.
 
 =cut
 
-package Tie::FileHandle::Buffer;
+package Tie::FileHandle::Split;
 
 use vars qw(@ISA $VERSION);
 use base qw(Tie::FileHandle::Base);
 $VERSION = 0.11;
 
 # TIEHANDLE
-# Usage: tie *HANDLE, 'Tie::FileHandle::Buffer'
+# Usage: tie *HANDLE, 'Tie::FileHandle::Split'
 sub TIEHANDLE {
 	my $self = '';
 	bless \$self, $_[0];;
@@ -64,7 +73,7 @@ sub clear {
 
 =head1 AUTHORS AND COPYRIGHT
 
-Written by Robby Walker ( robwalker@cpan.org ) for Point Writer ( http://www.pointwriter.com/ ).
+Written by Gonzalo Barco based on Tie::FileHandle::Buffer written by Robby Walker ( robwalker@cpan.org ) for Point Writer ( http://www.pointwriter.com/ ).
 
 You may redistribute/modify/etc. this module under the same terms as Perl itself.
 
