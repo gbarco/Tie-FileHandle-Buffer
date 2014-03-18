@@ -29,9 +29,7 @@ size to split files.
 
 =over 4
 
-=item * finish should sync to disk to ensure data has been written to disk
-
-test.pl
+=item * write_buffers should sync to disk to ensure data has been written.
 
 =back
 
@@ -47,26 +45,65 @@ use vars qw(@ISA $VERSION);
 use base qw(Tie::FileHandle::Base);
 $VERSION = 0.11;
 
+use File::Temp;
+
 # TIEHANDLE
 # Usage: tie *HANDLE, 'Tie::FileHandle::Split'
 sub TIEHANDLE {
-	my $self = '';
-	bless \$self, $_[0];;
+	my ( $class, $dir, $size ) = @_;
+
+	my $self = {
+		class => $class,
+		path => $path,
+		split_size => $size,
+		buffer => '',
+		buffer_size => 0,
+		filenames => (),
+	};
+
+	bless \$self, $class;
 }
 
 # Print to the selected handle
 sub PRINT {
-	${$_[0]} .= $_[1];
+	my ( $self, $data ) = @_;
+	$self->{buffer} .= $data;
+	$self->{buffer_size} += length( $data );
+
+	$self->_write_complete_files( $self->{split_size} );
 }
 
-# Retrieve the contents
-sub get_contents {
-	${$_[0]};
+sub _write_files{
+	my ( $self, $min_size ) = @_;
+
+	while ( $self->{buffer_size} > $min_size ) {
+		my ($fh, $filename) = File::Temp::tempfile( DIR => $self->{path} );
+
+		$fh->print( substr $self->{buffer},0,$min_size );
+		$self->{buffer_size} -= $self->$min_size;
+		$fh->close;
+
+		unshift @$self->{filenames}, $filename;
+	}
 }
 
-# Discard the contents
-sub clear {
-	${$_[0]} = '';
+# Write outstanding data to files
+sub write_buffers {
+	# Must implement
+	my ( $self ) = @_;
+
+	# this should not happen...
+	$self->_write_files( $self->{split_size} );
+	if ( $self->{buffer_size} > 0 ) {
+		$self->_write_files( $self->{buffer_size} );
+	}
+}
+
+# Returns filenames generated up to the moment the method is called
+sub get_filenames {
+	my ( $self ) = @_;
+
+	return $self->{filename};
 }
 
 1;
