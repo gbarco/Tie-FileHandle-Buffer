@@ -50,7 +50,7 @@ use File::Temp;
 # TIEHANDLE
 # Usage: tie *HANDLE, 'Tie::FileHandle::Split'
 sub TIEHANDLE {
-	my ( $class, $dir, $size ) = @_;
+	my ( $class, $path, $size ) = @_;
 
 	my $self = {
 		class => $class,
@@ -61,7 +61,7 @@ sub TIEHANDLE {
 		filenames => (),
 	};
 
-	bless \$self, $class;
+	bless $self, $class;
 }
 
 # Print to the selected handle
@@ -70,20 +70,20 @@ sub PRINT {
 	$self->{buffer} .= $data;
 	$self->{buffer_size} += length( $data );
 
-	$self->_write_complete_files( $self->{split_size} );
+	$self->_write_files( $self->{split_size} );
 }
 
 sub _write_files{
 	my ( $self, $min_size ) = @_;
 
-	while ( $self->{buffer_size} > $min_size ) {
+	while ( $self->{buffer_size} >= $min_size ) {
 		my ($fh, $filename) = File::Temp::tempfile( DIR => $self->{path} );
 
 		$fh->print( substr $self->{buffer},0,$min_size );
-		$self->{buffer_size} -= $self->$min_size;
+		$self->{buffer_size} -= $min_size;
 		$fh->close;
 
-		unshift @$self->{filenames}, $filename;
+		push @{$self->{filenames}}, $filename;
 	}
 }
 
@@ -103,7 +103,7 @@ sub write_buffers {
 sub get_filenames {
 	my ( $self ) = @_;
 
-	return $self->{filename};
+	return @{$self->{filenames}};
 }
 
 1;
