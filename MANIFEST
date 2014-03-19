@@ -1,6 +1,6 @@
-Buffer.pm
+lib/Tie/fileHandle/Split.pm
+lib/Tie/fileHandle/Split.t
 Changes
 Makefile.PL
 MANIFEST
 README
-test.pl
