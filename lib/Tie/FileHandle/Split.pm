@@ -43,7 +43,7 @@ package Tie::FileHandle::Split;
 
 use vars qw(@ISA $VERSION);
 use base qw(Tie::FileHandle::Base);
-$VERSION = 0.11;
+$VERSION = 0.9;
 
 use File::Temp;
 
