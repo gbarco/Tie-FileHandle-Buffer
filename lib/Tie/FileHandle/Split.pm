@@ -2,8 +2,7 @@
 
 =head1 NAME
 
-Tie::FileHandle::Split - filehandle tie that captures, splits and stores output
-into files in a given path.
+Tie::FileHandle::Split - Filehandle tie that captures, splits and stores output into files in a given path.
 
 =head1 DESCRIPTION
 
