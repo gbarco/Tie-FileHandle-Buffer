@@ -1,8 +1,5 @@
-Revision history for Perl extension Tie::FileHandle::Buffer.
+Revision history for Perl extension Tie::FileHandle::Split.
 
-0.11 Wed Sep 04 14:13:27 2002
-	- fixed dependency
-
-0.1  Mon Mar 18 12:46:30 2002
+0.9  Wed Mar 19 12:54:30 2014
 	- first full release version
 
