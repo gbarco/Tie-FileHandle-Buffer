@@ -12,17 +12,17 @@ size to split files.
 
 =head1 SYNOPSIS
 
-	# $path should exist or the current process have
-	# $size should be > 0
-	tie *HANDLE, 'Tie::FileHandle::Split', $path, $size;
+# $path should exist or the current process have
+# $size should be > 0
+tie *HANDLE, 'Tie::FileHandle::Split', $path, $size;
 
-	(tied *HANDLE)->print( ' ' x 1024 );
+(tied *HANDLE)->print( ' ' x 1024 );
 
-	# write all outstanding output from buffers to files
-	(tied *HANDLE)->write_buffers;
+# write all outstanding output from buffers to files
+(tied *HANDLE)->write_buffers;
 
-	# get generated filenames to the moment
-	(tied *HANDLE)->get_filenames();
+# get generated filenames to the moment
+(tied *HANDLE)->get_filenames();
 
 =head1 TODO
 
@@ -109,7 +109,7 @@ sub get_filenames {
 
 =head1 AUTHORS AND COPYRIGHT
 
-Written by Gonzalo Barco based on Tie::FileHandle::Buffer written by Robby Walker ( robwalker@cpan.org ) for Point Writer ( http://www.pointwriter.com/ ).
+Written by Gonzalo Barco based on Tie::FileHandle::Buffer written by Robby Walker ( robwalker@cpan.org )
 
 You may redistribute/modify/etc. this module under the same terms as Perl itself.
 
