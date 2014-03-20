@@ -16,7 +16,7 @@ size to split files.
 # $size should be > 0
 tie *HANDLE, 'Tie::FileHandle::Split', $path, $size;
 
-(tied *HANDLE)->print( ' ' x 1024 );
+(tied *HANDLE)->print( ' ' x $many_times_size );
 
 # write all outstanding output from buffers to files
 (tied *HANDLE)->write_buffers;
@@ -40,6 +40,9 @@ No known bugs. Please report.
 
 package Tie::FileHandle::Split;
 
+use strict;
+use warnings;
+
 use vars qw(@ISA $VERSION);
 use base qw(Tie::FileHandle::Base);
 $VERSION = 0.9;
@@ -49,15 +52,15 @@ use File::Temp;
 # TIEHANDLE
 # Usage: tie *HANDLE, 'Tie::FileHandle::Split'
 sub TIEHANDLE {
-	my ( $class, $path, $size ) = @_;
+	my ( $class, $path, $split_size ) = @_;
 
 	my $self = {
 		class => $class,
 		path => $path,
-		split_size => $size,
+		split_size => $split_size,
 		buffer => '',
 		buffer_size => 0,
-		filenames => (),
+		filenames => [],
 	};
 
 	bless $self, $class;
@@ -74,15 +77,26 @@ sub PRINT {
 
 sub _write_files{
 	my ( $self, $min_size ) = @_;
+	
+	my $written_chunks = 0;
 
-	while ( $self->{buffer_size} >= $min_size ) {
+	while ( $self->{buffer_size} - $min_size * $written_chunks >= $min_size ) {
 		my ($fh, $filename) = File::Temp::tempfile( DIR => $self->{path} );
-
-		$fh->print( substr $self->{buffer},0,$min_size );
-		$self->{buffer_size} -= $min_size;
+		
+		
+		# added complexity to work buffer with a cursor and doing a single buffer chomp
+		$fh->print( substr $self->{buffer},$min_size * $written_chunks, $min_size * ++$written_chunks );
 		$fh->close;
 
 		push @{$self->{filenames}}, $filename;
+	}
+	if ( $written_chunks ) {
+		$self->{buffer_size} -= $min_size * $written_chunks;
+		if ( $self->{buffer_size} > 0 ) {
+			$self->{buffer} = substr $self->{buffer}, -$self->{buffer_size} ;
+		} else {
+			$self->{buffer} = '';
+		}
 	}
 }
 
@@ -102,7 +116,8 @@ sub write_buffers {
 sub get_filenames {
 	my ( $self ) = @_;
 
-	return @{$self->{filenames}};
+	return @{$self->{filenames}} if defined $self->{filenames};
+	return undef;
 }
 
 1;
