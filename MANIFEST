@@ -1,5 +1,5 @@
 lib/Tie/FileHandle/Split.pm
-lib/Tie/FileHandle/Split.t
+t/Split.t
 Changes
 Makefile.PL
 MANIFEST

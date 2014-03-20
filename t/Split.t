@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests=>17;
+use Test::More tests=>18;
 
 use lib '../lib';
 
@@ -10,6 +10,7 @@ my @tie_file_handle_split_exported = qw( TIEHANDLE PRINT PRINTF WRITE GETC READ 
 BEGIN {
 	use_ok('FileHandle');
 	use_ok('File::Temp');
+	use_ok('Tie::FileHandle::Base');
 	use_ok('Tie::FileHandle::Split');
 }
 
