@@ -88,6 +88,8 @@ sub _write_files{
 	}
 }
 
+=over 4
+
 =item write_buffers
 
 C<write_buffers> writes all outstanding buffers to files.
@@ -97,6 +99,8 @@ written to the filehandle after a call to write_buffers a new file will be
 created. On a standard file split operation it is called after writting all data
 to the tied file handle ensure the last bit of data is written (in the most
 common case where data size is not exactly divisible by the split size).
+
+=back
 
 =cut
 
@@ -111,12 +115,16 @@ sub write_buffers {
 	}
 }
 
+=over 4
+
 =item get_filenames
 
 C<get_filenames> returns a list of the files generates until the moment of the
 call. It should be used to get the names of files and rename them to the
 desired filenames. In a standard splitting operation C<get_filenames> is
 called after outputting all data to the filehandle and calling C<write_buffers>.
+
+=back
 
 =cut
 
