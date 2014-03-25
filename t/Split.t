@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests=>40;
+use Test::More tests=>41;
 
 use lib '../lib';
 
@@ -35,6 +35,8 @@ my $file_created = 0; my $code = sub { $file_created++; };
 	ok ( -e $_[1], 'Listener called with an existing filename.' );
 	is ( -s $_[1], $split_size, 'Listener called with filename created with correct split_size.' );
 } );
+
+is( (tied *TEST)->_get_listeners(), 2, 'Listeners registered from scalars.' );
 
 TEST->print( ' ' x 1 ); @files = (tied *TEST)->get_filenames();
 is( scalar @files, 1, 'First file generated at split_size.' );
